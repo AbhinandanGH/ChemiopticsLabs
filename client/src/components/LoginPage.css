@@ -1,0 +1,75 @@
+body {
+    font-family: "Merriweather", serif;
+    margin: 0;
+    padding: 0;
+    background-color: #4c6565;
+    background-image: none;
+}
+
+
+.login-container {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input[id="username"],
+.input-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.input-group button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.input-group button:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.signup-link {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.signup-link span {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.signup-link span:hover {
+    text-decoration: underline;
+}
