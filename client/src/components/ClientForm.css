@@ -5,7 +5,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #edf4f4;
-    background-image: url("/src/images/form_background.jpg");
+    background-image: url("C:\Users\SST\OneDrive\Desktop\chemioptics-healthcare\client\src\images\form_background.jpg");
     background-size: cover;
 }
 
@@ -85,6 +85,15 @@ h2 {
 
 .checkbox-group input[type="checkbox"] {
     margin-right: 10px;
+}
+
+.input-group input[type="radio"] {
+    margin-right: 10px;
+}
+
+.Radio {
+    padding-top: 10px;
+    flex: 1 auto !important;
 }
 
 .input-group input[type="submit"] {

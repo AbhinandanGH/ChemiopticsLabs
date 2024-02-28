@@ -9,11 +9,18 @@ const ClientForm = () => {
     samples: Array(1).fill({ sampleId: '', labCode: '' }),
     email: '',
     phone: '',
-    address: '',
+    address: {
+      line1: '',
+      line2: '',
+      pincode: '',
+      landmark: ''
+    },
     sample: '',
     sampleDate: '',
     sampleTime: '',
     collectorName: '',
+    collectedDate: '',
+    collectedTime: '',
     examination: {
       suitable: false,
       damage: false,
@@ -28,6 +35,7 @@ const ClientForm = () => {
       quantitySuitable: false,
       samplePreserved: false,
     },
+    Decision: '',
   });
 
   const handleChange = (e, index, field) => {
@@ -59,7 +67,23 @@ const ClientForm = () => {
           i === index ? { ...sample, [field]: value } : sample
         ),
       }));
-    } else {
+    }
+    else if (name.startsWith('line') || name === 'pincode' || name === 'landmark') {
+      setFormData((prevData) => ({
+        ...prevData,
+        address: {
+          ...prevData.address,
+          [name]: value,
+        },
+      }));
+    }
+    else if (name === 'Decision') {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+    else {
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
@@ -73,76 +97,173 @@ const ClientForm = () => {
   };
 
   const getCurrentDate = () => formatDate(new Date().toISOString());
+  const getCurrentTime = () => {
+    const date = new Date();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+    
+
     const pdf = new jsPDF();
     const docWidth = pdf.internal.pageSize.getWidth();
-    const companyName = "CHEMIOPTICS HEALTHCARE PVT LTD (Testing Division)";
-    const textWidth = pdf.getStringUnitWidth(companyName) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-  
-    const xCoordinate = (docWidth - textWidth) / 2;
+
+    // Company Name
+    const companyName = "CHEMIOPTICS HEALTHCARE PVT LTD";
+    const companyNameWidth = pdf.getStringUnitWidth(companyName) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+    const companyNameX = (docWidth - companyNameWidth) / 2;
+
+    const testing = "(Testing Division)";
+    const testingWidth = pdf.getStringUnitWidth(testing) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+    const testingNameX = (docWidth - testingWidth) / 2;
+    const address = "R.H.KULKARNI BUILDING, BVB CAMPUS, HUBLI-580031";
+    const addressWidth = pdf.getTextWidth(address);
+    const addressX = (docWidth - addressWidth) / 2;
+
     let yOffset = 10;
+    // // Print Address
+    // pdf.setFont("times", "roman");
+    // pdf.setFontSize(12);
+    // pdf.text(address, addressX, yOffset);
+
+
+
+
+
+    // Print Company Name
+    pdf.setFont("times", "bold");
+    pdf.setFontSize(18);
+    pdf.text(companyName, companyNameX, yOffset);
+
+    // Adjust yOffset
+    yOffset += 15;
+
+    // Print testing
+    pdf.setFont("times", "bold");
+    pdf.setFontSize(18);
+    pdf.text(testing, testingNameX, yOffset);
+
+    // Adjust yOffset
+    yOffset += 10;
+
+    // Print Address
+    //     pdf.setFont("times", "roman");
+    // pdf.setFontSize(12);
+    // pdf.text(address, addressX, yOffset);
+
+    // Adjust yOffset
+    yOffset += 15;
+
+    // Print Client Information Form and Date
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(18);
-    pdf.text(companyName, xCoordinate, yOffset);
-    yOffset += 15;  // Increase spacing after the company name
-    pdf.setFont("helvetica", "normal");
-    pdf.text("Client Information Form", 10, yOffset);
-    yOffset += 10;
-  
+
+    pdf.text("Client Information", 10, yOffset);
     pdf.setFontSize(12);
-    pdf.text(`Date: ${getCurrentDate()}`, 10, yOffset + 5);  // Adjusted yOffset
-    pdf.text(`Name: ${formData.name}`, 10, yOffset + 15);  // Adjusted yOffset
-    yOffset += 10;
-    pdf.text(`Number of Samples: ${formData.numberofsamples}`, 10, yOffset);
-    yOffset += 10;
-    pdf.setFont("helvetica", "bold");
-    formData.samples.forEach((sample, index) => {
-      yOffset += 10;
-      pdf.text(`Sample ${index + 1}:`, 10, yOffset);
-      yOffset += 10;
-      pdf.text(`Sample ID: ${sample.sampleId}`, 20, yOffset);
-      yOffset += 10;
-      pdf.text(`Lab Code: ${sample.labCode}`, 20, yOffset);
-    });
+
+    pdf.text(`Date:`, 10, yOffset + 10);
     pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.collectedDate}`, 100, yOffset + 10);
+
+    // Print Time
+    pdf.setFont("times", "bold");
+    pdf.setFontSize(12);
+    pdf.text(`Time:`, 10, yOffset + 20);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.collectedTime}`, 100, yOffset + 20);
+
+    // Print other details
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Name:", 10, yOffset + 30);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.name}`, 100, yOffset + 30);
+    yOffset += 40;
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Phone:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.phone}`, 100, yOffset);
     yOffset += 10;
-    pdf.text(`Email: ${formData.email}`, 10, yOffset);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Address Line1:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.address.line1}`, 100, yOffset);
     yOffset += 10;
-    pdf.text(`Phone: ${formData.phone}`, 10, yOffset);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Address Line2:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.address.line2}`, 100, yOffset);
     yOffset += 10;
-    pdf.text(`Address: ${formData.address}`, 10, yOffset);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Landmark:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.address.landmark}`, 100, yOffset);
     yOffset += 10;
-    pdf.text(`Description of the sample: ${formData.sample}`, 10, yOffset);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Pincode:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.address.pincode}`, 100, yOffset);
     yOffset += 10;
-    pdf.text(`Sample Collection Date: ${formData.sampleDate}`, 10, yOffset);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Description of the sample:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.sample}`, 100, yOffset);
     yOffset += 10;
-    pdf.text(`Time at which sample collected: ${formData.sampleTime}`, 10, yOffset);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Sample Collection Date:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.sampleDate}`, 100, yOffset);
     yOffset += 10;
-    pdf.text(`Collector's Name: ${formData.collectorName}`, 10, yOffset);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Time at which sample collected:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.sampleTime}`, 100, yOffset);
     yOffset += 10;
-  
-    pdf.text("Examination of the sample:", 10, yOffset);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Sample Received and Inspected by:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.collectorName}`, 100, yOffset);
     yOffset += 10;
-    Object.entries(formData.examination).forEach(([key, value], index) => {
-      if (value) {
-        const label = document.querySelector(`label[for=${key}]`).textContent;
-        pdf.text(`- ${label}`, 20, yOffset + index * 10);
-      }
-    });
-    yOffset += Object.keys(formData.examination).length * 10 + 10;
-  
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Decision Rule/Statement of Conformity:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.Decision}`, 100, yOffset);
+    yOffset += 10;
+
+
+    // Print Examination of the sample
+    // pdf.text("Examination of the sample:", 10, yOffset);
+    // yOffset += 10;
+    // Object.entries(formData.examination).forEach(([key, value], index) => {
+    //   if (value) {
+    //     const label = document.querySelector(`label[for=${key}]`).textContent;
+    //     pdf.text(`- ${label}`, 20, yOffset + index * 10);
+    //   }
+    // });
+    yOffset += Object.keys(formData.examination).length * 3 + 3;
+
+    // Print Signatures
     pdf.text("Client's Signature:", 10, yOffset);
     pdf.text("__________________________", 10, yOffset + 10);
-  
     pdf.text("Collector's Signature:", 10, yOffset + 30);
     pdf.text("__________________________", 10, yOffset + 40);
-  
+
+    // Save PDF
     pdf.save('client_information.pdf');
   };
-  
+
   return (
     <div className="container">
       <form id="clientForm" onSubmit={handleSubmit}>
@@ -158,6 +279,61 @@ const ClientForm = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="addressLine1">Address Line 1:</label>
+          <input
+            type="text"
+            id="addressLine1"
+            name="line1"
+            value={formData.addressline1}
+            onChange={handleChange}
+            required />
+        </div>
+        <div className="input-group">
+          <label htmlFor="addressLine2">Address Line 2:</label>
+          <input type="text" id="addressLine2" name="line2" value={formData.addressline2} onChange={handleChange} required />
+        </div>
+        <div className="input-group">
+          <label htmlFor="landmark">Landmark:</label>
+          <input type="text" id="landmark" name="landmark" value={formData.landmark} onChange={handleChange} />
+        </div>
+        <div className="input-group">
+          <label htmlFor="pincode">Pincode:</label>
+          <input
+            type="text"
+            id="pincode"
+            name="pincode"
+            placeholder='E.g. 580031'
+            pattern='^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$'
+            value={formData.pincode}
+            onChange={handleChange}
+            required />
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="phone">Phone Number:</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Format: 1234567890"
+            value={formData.phone}
+            onChange={(e) => handleChange(e)}
+            required
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder='E.g. abc.xyz@email.com'
+            value={formData.email}
+            onChange={(e) => handleChange(e)}
           />
         </div>
 
@@ -187,22 +363,26 @@ const ClientForm = () => {
                 value={sample.sampleId}
                 onChange={(e) => handleChange(e, index, 'sampleId')}
                 required
-            >
-                 <option value="">Select Sample ID</option>
-                 <option value="wastewater">Waste water</option>
-                 <option value="drinkingwater">Drinking water</option>
-                 <option value="irrigationwater">Irrigation water</option>
-                 <option value="groundwater">Ground water</option>
-                 <option value="surfacewater">Surface water</option>
-                 <option value="constructionwater">Construction water</option>
-             </select>
+              >
+                <option value="">Select Sample ID</option>
+                {/* <option value="wastewater">Waste water</option> */}
+                <optgroup label="Waste Water Sub-branches">
+                  <option value="subBranch1">Sub-branch 1</option>
+                  <option value="subBranch2">Sub-branch 2</option>
+                </optgroup>
+                <option value="drinkingwater">Drinking water</option>
+                <option value="irrigationwater">Irrigation water</option>
+                <option value="groundwater">Ground water</option>
+                <option value="surfacewater">Surface water</option>
+                <option value="constructionwater">Construction water</option>
+              </select>
             </div>
             <div className="input-group">
               <label htmlFor={`labCode${index + 1}`}>Lab Code {index + 1}:</label>
               <input
                 type="text"
                 pattern='chpl[0-9]{1,9}|CHPL[0-9]{1,9}'
-                placeholder='eg: CHPL000'
+                placeholder='E.g. CHPL000'
                 id={`labCode${index + 1}`}
                 name={`labCode${index + 1}`}
                 value={sample.labCode}
@@ -212,42 +392,6 @@ const ClientForm = () => {
             </div>
           </div>
         ))}
-        <div className="input-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={(e) => handleChange(e)}
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="phone">Phone Number:</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            placeholder="Format: 1234567890"
-            value={formData.phone}
-            onChange={(e) => handleChange(e)}
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="address">Address:</label>
-          <textarea
-            id="address"
-            name="address"
-            rows="4"
-            value={formData.address}
-            onChange={(e) => handleChange(e)}
-            required
-          ></textarea>
-        </div>
 
         <div className="input-group">
           <label htmlFor="sample">Description of the sample:</label>
@@ -370,7 +514,7 @@ const ClientForm = () => {
         </div>
 
         <div className="input-group">
-          <label htmlFor="collectorName">Collector's Name:</label>
+          <label htmlFor="collectorName">Sample inspected and received by:</label>
           <input
             type="text"
             id="collectorName"
@@ -382,6 +526,42 @@ const ClientForm = () => {
         </div>
 
         <div className="input-group">
+          <fieldset>
+            <legend><b>Decision Rule/Statement Of Conformity:</b></legend>
+            <div className='Radio'>
+              {/* Required Radio Button */}
+              <label htmlFor="Required">
+                <input
+                  type="radio"
+                  id="Required"
+                  name="Decision"
+                  value="Required"
+                  checked={formData.Decision === 'Required'}
+                  onChange={(e) => handleChange(e)}
+                  required
+                />
+                Required
+              </label>
+
+              {/* Not Required Radio Button */}
+              <label htmlFor="notRequired">
+                <input
+                  type="radio"
+                  id="notRequired"
+                  name="Decision"
+                  value="Not Required"
+                  checked={formData.Decision === 'Not Required'}
+                  onChange={(e) => handleChange(e)}
+                />
+                Not Required
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div className="input-group">
+          <input type="hidden" name="currentDate" value={formData.collectedDate = getCurrentDate()} />
+          <input type="hidden" name="currentTime" value={formData.collectedTime = getCurrentTime()} />
           <input type="submit" value="Submit" />
         </div>
       </form>
