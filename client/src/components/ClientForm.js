@@ -1,10 +1,11 @@
 import jsPDF from 'jspdf';
 import React, { useState } from 'react';
+
 import './ClientForm.css';
 
 const ClientForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
+      name: '',
     numberofsamples: 1,
     samples: Array(1).fill({ sampleId: '', labCode: '' }),
     email: '',
@@ -37,6 +38,15 @@ const ClientForm = () => {
     },
     Decision: '',
   });
+
+  let name ,value;
+  const handleInputs = (e) => {
+     console.log(e);
+    name=e.target.name;
+    value=e.target.value;
+    setFormData({...formData, [name]:value});
+
+  };
 
   const handleChange = (e, index, field) => {
     const { name, value, type, checked } = e.target;
@@ -104,11 +114,12 @@ const ClientForm = () => {
     return `${hours}:${minutes}`;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+  
 
-    const pdf = new jsPDF();
+    try {
+       const pdf = new jsPDF();
     const docWidth = pdf.internal.pageSize.getWidth();
 
     // Company Name
@@ -262,7 +273,30 @@ const ClientForm = () => {
 
     // Save PDF
     pdf.save('client_information.pdf');
-  };
+
+      // Send form data to the server
+      const response = await fetch('http://localhost:3000/api/submitForm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      // Check if the server successfully stored the data
+      if (response.ok) {
+        console.log('Form data stored successfully!');
+  
+        // Redirect to the desired URL after successful form submission
+        window.location.href = 'http://localhost:3001/ticksheet'; // Replace with your desired URL
+      } else {
+        console.error('Error storing form data:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error sending form data to server:', error);
+    }
+};
+  // ... your existing JSX code
 
   return (
     <div className="container">
@@ -562,7 +596,7 @@ const ClientForm = () => {
         <div className="input-group">
           <input type="hidden" name="currentDate" value={formData.collectedDate = getCurrentDate()} />
           <input type="hidden" name="currentTime" value={formData.collectedTime = getCurrentTime()} />
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit"/>
         </div>
       </form>
     </div>

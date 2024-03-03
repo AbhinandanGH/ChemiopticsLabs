@@ -13,7 +13,6 @@ const LoginPage = ({ onLogin, onCreateAccount }) => {
         // Perform authentication
         if (username === 'admin' && password === 'password') {
             onLogin();
-            
             navigate('/client-form');
         } 
         else if(username === 'admin1' && password === 'password1'){

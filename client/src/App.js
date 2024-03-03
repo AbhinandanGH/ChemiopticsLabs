@@ -47,6 +47,7 @@ function App() {
             path="/client-form"
             element={isLoggedIn ? <ClientForm /> : <LoginPage onLogin={handleLogin} onCreateAccount={handleCreateAccount} />}
           />
+          
           <Route
             path="/ticksheet"
             element={isLoggedIn ? <TickSheet /> : <LoginPage onLogin={handleLogin} onCreateAccount={handleCreateAccount} />}
