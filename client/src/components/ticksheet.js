@@ -1,10 +1,16 @@
 // ticksheet.js
 import React, { useState } from 'react';  // Import React and useState from React
+
 import './ticksheet.css';  // Import the styles from ticksheet.css
 
 const TickSheet = () => {  // Define a functional component named TickSheet
   const [selectedParameters, setSelectedParameters] = useState([]);  // State hook to manage selected parameters
 
+
+
+
+
+  
   const handleCheckboxChange = (parameter) => {  // Function to handle checkbox change
     setSelectedParameters((prevSelected) => {  // Update selectedParameters state based on previous state
       if (prevSelected.includes(parameter)) {
@@ -60,6 +66,9 @@ const TickSheet = () => {  // Define a functional component named TickSheet
     }
   };
 
+
+
+
   return (  // JSX structure representing the component's UI
     <div>
       <h2>Physico-Chemical Parameters to be analyzed</h2>
@@ -73,7 +82,7 @@ const TickSheet = () => {  // Define a functional component named TickSheet
         <button onClick={selectSurface}>Irrigation Water</button>
       </div>
 
-
+      
       <table>
         <thead>
           <tr>

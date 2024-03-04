@@ -9,7 +9,7 @@ const app = express();
 const port = 3000;
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://admin:kP1WmBgdCSpEAZ7M@backenddb.otnsuqn.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB', {
+mongoose.connect('mongodb+srv://abhi:abhi@cluster0.vsjvmoa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -40,12 +40,6 @@ const FormData = mongoose.model('FormData', {
         labeling: Boolean,
         quantity: Boolean,
         preserved: Boolean,
-        containerSuitable: Boolean,
-        containerDamage: Boolean,
-        dateAndTimeSatisfactory: Boolean,
-        properLabeling: Boolean,
-        quantitySuitable: Boolean,
-        samplePreserved: Boolean,
       },
       Decision: String,
 });

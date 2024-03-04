@@ -4,9 +4,7 @@ body {
     font-family: "Merriweather", serif;
     margin: 0;
     padding: 0;
-    background-color: #edf4f4;
-    background-image: url("C:\Users\SST\OneDrive\Desktop\chemioptics-healthcare\client\src\images\form_background.jpg");
-    background-size: cover;
+    background-color: rgba(230, 223, 223, 0.716) !important;
 }
 
 .container {
@@ -108,4 +106,10 @@ h2 {
 
 .input-group input[type="submit"]:hover {
     background-color: #45a049;
+}
+
+select option[value="surfacewater"],
+select option[value="irrigationwater"],
+select option[value="constructionwater"] {
+  font-weight: bold;
 }

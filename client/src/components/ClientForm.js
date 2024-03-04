@@ -1,9 +1,10 @@
 import jsPDF from 'jspdf';
 import React, { useState } from 'react';
-
 import './ClientForm.css';
+import { useNavigate } from 'react-router-dom';
 
-const ClientForm = () => {
+
+const ClientForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
       name: '',
     numberofsamples: 1,
@@ -114,13 +115,14 @@ const ClientForm = () => {
     return `${hours}:${minutes}`;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
+  const navigate = useNavigate();
 
+  const handleSubmit = async (e ) => {
+    e.preventDefault();
     try {
        const pdf = new jsPDF();
     const docWidth = pdf.internal.pageSize.getWidth();
+    const index=0;
 
     // Company Name
     const companyName = "CHEMIOPTICS HEALTHCARE PVT LTD";
@@ -130,9 +132,7 @@ const ClientForm = () => {
     const testing = "(Testing Division)";
     const testingWidth = pdf.getStringUnitWidth(testing) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
     const testingNameX = (docWidth - testingWidth) / 2;
-    const address = "R.H.KULKARNI BUILDING, BVB CAMPUS, HUBLI-580031";
-    const addressWidth = pdf.getTextWidth(address);
-    const addressX = (docWidth - addressWidth) / 2;
+ 
 
     let yOffset = 10;
     // // Print Address
@@ -226,6 +226,12 @@ const ClientForm = () => {
     pdf.setFont("helvetica", "bold");
     pdf.text("Description of the sample:", 10, yOffset);
     pdf.setFont("helvetica", "normal");
+    pdf.text(`${formData.samples[index].sampleId}`, 100, yOffset);
+    yOffset += 10;
+
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Description of the sample:", 10, yOffset);
+    pdf.setFont("helvetica", "normal");
     pdf.text(`${formData.sample}`, 100, yOffset);
     yOffset += 10;
 
@@ -288,13 +294,18 @@ const ClientForm = () => {
         console.log('Form data stored successfully!');
   
         // Redirect to the desired URL after successful form submission
-        window.location.href = 'http://localhost:3001/ticksheet'; // Replace with your desired URL
+      //  window.location.href = 'http://localhost:3001/ticksheet'; // Replace with your desired URL
       } else {
         console.error('Error storing form data:', response.statusText);
       }
     } catch (error) {
       console.error('Error sending form data to server:', error);
     }
+
+   
+
+    onSubmit();
+    navigate('/ticksheet')
 };
   // ... your existing JSX code
 
@@ -400,15 +411,21 @@ const ClientForm = () => {
               >
                 <option value="">Select Sample ID</option>
                 {/* <option value="wastewater">Waste water</option> */}
-                <optgroup label="Waste Water Sub-branches">
-                  <option value="subBranch1">Sub-branch 1</option>
-                  <option value="subBranch2">Sub-branch 2</option>
+                <optgroup label="Drinking Water">
+                  <option value="Drinking Water-Premium">Premium</option>
+                  <option value="Drinking Water-Complete">Complete</option>
                 </optgroup>
-                <option value="drinkingwater">Drinking water</option>
-                <option value="irrigationwater">Irrigation water</option>
-                <option value="groundwater">Ground water</option>
-                <option value="surfacewater">Surface water</option>
-                <option value="constructionwater">Construction water</option>
+                <optgroup label="Waste Water">
+                  <option value="Waste Water-Premium">Premium</option>
+                  <option value="Waste Water-Complete">Complete</option>
+                </optgroup>
+                <optgroup label="Ground Water">
+                  <option value="Ground Water-Premium">Premium</option>
+                  <option value="Ground Water-Complete">Complete</option>
+                </optgroup>
+                <option value="surfacewater">Surface Water</option>
+                <option value="irrigationwater">Irrigation Water</option>
+                <option value="constructionwater">Construction Water</option>
               </select>
             </div>
             <div className="input-group">

@@ -9,6 +9,7 @@ import TickSheet from './components/ticksheet';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -24,6 +25,9 @@ function App() {
   const handleCreateAccount = () => {
     setIsSignup(true);
   };
+  const handleSubmit = ()=>{
+    setIsSubmit(true);
+  }
   useEffect(() => {
     // Check if the user is logged in when the component mounts
     const storedLoggedIn = sessionStorage.getItem('isLoggedIn');
@@ -45,12 +49,12 @@ function App() {
           />
           <Route
             path="/client-form"
-            element={isLoggedIn ? <ClientForm /> : <LoginPage onLogin={handleLogin} onCreateAccount={handleCreateAccount} />}
+            element={isLoggedIn ? <ClientForm onSubmit={handleSubmit}/> : <LoginPage onLogin={handleLogin} onCreateAccount={handleCreateAccount} />}
           />
           
           <Route
             path="/ticksheet"
-            element={isLoggedIn ? <TickSheet /> : <LoginPage onLogin={handleLogin} onCreateAccount={handleCreateAccount} />}
+            element={isSubmit ? <TickSheet /> : <Navigate to="/client-form" replace />}
           />
           
           <Route path="/" element={isLoggedIn ? <ClientForm /> : <Navigate to="/login" replace />} />
