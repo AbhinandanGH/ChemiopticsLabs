@@ -1,6 +1,7 @@
 // ticksheet.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useLocation } from 'react-router-dom';
 import './ticksheet.css';
 
 const Ticksheet = () => {
