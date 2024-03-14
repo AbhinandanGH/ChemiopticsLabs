@@ -1,0 +1,91 @@
+
+/* Styling for the header */
+h2 {
+  font-size: 28px;
+  color: #3498db;
+  text-align: center;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Styling for the sample list */
+.samplePage ul {
+  list-style-type: none;
+  padding-left: 200px;
+  padding-right: 200px;
+
+}
+
+/* Styling for each sample item */
+.samplePage li {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Styling for hover effect on sample items */
+.samplePage li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for links */
+.samplePage a {
+  color: #2980b9;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+/* Styling for hover effect on links */
+.samplePage a:hover {
+  color: #1a5276;
+  text-decoration: underline;
+}
+
+.sample-page-title {
+
+  text-align: center;
+  font-size: 30px;
+
+}
+
+
+/* Animation for sample items */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply animation to sample items */
+.samplePage li {
+  animation: fadeInUp 0.5s ease;
+}
+
+/* Styling for sample ID */
+.samplePage  .sample-id {
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+/* Styling for lab code */
+.samplePage  .lab-code {
+  font-style: italic;
+  color: #7f8c8d;
+}
+
+/* Container styling */
+.samplePage  .container {
+  max-width: 100px; /* Adjust the max-width as needed */
+  margin: 0 auto;
+}

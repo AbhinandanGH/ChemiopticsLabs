@@ -1,18 +1,14 @@
 // ticksheet.js
-import React, { useState } from 'react';  // Import React and useState from React
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import './ticksheet.css';
 
-import './ticksheet.css';  // Import the styles from ticksheet.css
+const Ticksheet = () => {
+  const [selectedParameters, setSelectedParameters] = useState([]);
+  const navigate = useNavigate(); // Use useNavigate for navigation
 
-const TickSheet = () => {  // Define a functional component named TickSheet
-  const [selectedParameters, setSelectedParameters] = useState([]);  // State hook to manage selected parameters
-
-
-
-
-
-  
-  const handleCheckboxChange = (parameter) => {  // Function to handle checkbox change
-    setSelectedParameters((prevSelected) => {  // Update selectedParameters state based on previous state
+  const handleCheckboxChange = (parameter) => {
+    setSelectedParameters((prevSelected) => {
       if (prevSelected.includes(parameter)) {
         return prevSelected.filter((selected) => selected !== parameter);
       } else {
@@ -20,7 +16,6 @@ const TickSheet = () => {  // Define a functional component named TickSheet
       }
     });
   };
-
 
   // Function to select checkboxes for Waste parameters
   const selectWaste = () => {
@@ -66,12 +61,26 @@ const TickSheet = () => {  // Define a functional component named TickSheet
     }
   };
 
-
-
+  const navigateToSamplePage = () => {
+    // Navigate back to the SamplePage component
+    navigate('/samplePage');
+  };
 
   return (  // JSX structure representing the component's UI
     <div>
       <h2>Physico-Chemical Parameters to be analyzed</h2>
+{/* 
+      <div>
+      <h2>Samples</h2>
+      <ul>
+        {samples.map((sample, index) => (
+          <li key={index}>
+            <p>Sample ID: {sample.sampleId}</p>
+            <p>Lab Code: {sample.labCode}</p>
+          </li>
+        ))}
+      </ul>
+       </div> */}
 
       <div className="button-container">
         <button onClick={selectWaste}>Waste Water</button>
@@ -82,6 +91,10 @@ const TickSheet = () => {  // Define a functional component named TickSheet
         <button onClick={selectSurface}>Irrigation Water</button>
       </div>
 
+      
+      <div className="navigation-container">
+        <button onClick={navigateToSamplePage}>Back to Sample Page</button>
+      </div>
       
       <table>
         <thead>
@@ -279,4 +292,4 @@ const TickSheet = () => {  // Define a functional component named TickSheet
   );
 };
 
-export default TickSheet;  // Export the TickSheet component
+export default Ticksheet;  // Export the TickSheet component

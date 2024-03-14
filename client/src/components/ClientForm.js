@@ -1,3 +1,4 @@
+// ClientForm.js
 import jsPDF from 'jspdf';
 import React, { useState } from 'react';
 import './ClientForm.css';
@@ -5,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 
 const ClientForm = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({
+  const [setRedirect] = useState(false);
+   const [formData, setFormData] = useState({
       name: '',
     numberofsamples: 1,
     samples: Array(1).fill({ sampleId: '', labCode: '' }),
@@ -304,10 +306,18 @@ const ClientForm = ({ onSubmit }) => {
 
    
 
-    onSubmit();
-    navigate('/ticksheet')
+    // onSubmit();
+    // navigate('/ticksheet')
+
+    localStorage.setItem('samplesData', JSON.stringify(formData.samples));
+
+    // Redirect to SamplePage component after successful form submission
+    navigate('/samplePage');
 };
-  // ... your existing JSX code
+
+// if (redirect) {
+//   return <SamplePage samples={formData.samples} />;
+// }
 
   return (
     <div className="container">
@@ -615,6 +625,7 @@ const ClientForm = ({ onSubmit }) => {
           <input type="hidden" name="currentTime" value={formData.collectedTime = getCurrentTime()} />
           <input type="submit" value="Submit"/>
         </div>
+        
       </form>
     </div>
   );
