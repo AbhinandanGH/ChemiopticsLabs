@@ -7,6 +7,8 @@ import './ticksheet.css';
 const Ticksheet = () => {
   const [selectedParameters, setSelectedParameters] = useState([]);
   const navigate = useNavigate(); // Use useNavigate for navigation
+  const location = useLocation(); // Use useLocation to access location object
+  const sample = location.state ? location.state.sample : null; // Extract sample object from location state
 
   const handleCheckboxChange = (parameter) => {
     setSelectedParameters((prevSelected) => {
@@ -82,6 +84,15 @@ const Ticksheet = () => {
         ))}
       </ul>
        </div> */}
+       {/* Render sample details if available */}
+      {sample && (
+        <div className="sample-details">
+          <h3>Sample Details</h3>
+          <p>Sample ID: {sample.sampleId}</p>
+          <p>Lab Code: {sample.labCode}</p>
+          {/* Render additional sample details as needed */}
+        </div>
+      )}
 
       <div className="button-container">
         <button onClick={selectWaste}>Waste Water</button>
