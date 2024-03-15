@@ -422,20 +422,20 @@ const ClientForm = ({ onSubmit }) => {
                 <option value="">Select Sample ID</option>
                 {/* <option value="wastewater">Waste water</option> */}
                 <optgroup label="Drinking Water">
-                  <option value="Drinking Water-Premium">Premium</option>
-                  <option value="Drinking Water-Complete">Complete</option>
+                  <option value="DrinkingWaterPremium">Drinking-Premium</option>
+                  <option value="DrinkingWaterComplete">Drinking-Complete</option>
                 </optgroup>
                 <optgroup label="Waste Water">
-                  <option value="Waste Water-Premium">Premium</option>
-                  <option value="Waste Water-Complete">Complete</option>
+                  <option value="WasteWaterPremium">Waste-Premium</option>
+                  <option value="WasteWaterComplete">Waste-Complete</option>
                 </optgroup>
                 <optgroup label="Ground Water">
-                  <option value="Ground Water-Premium">Premium</option>
-                  <option value="Ground Water-Complete">Complete</option>
+                  <option value="GroundWaterPremium">Ground-Premium</option>
+                  <option value="GroundWaterComplete">Ground-Complete</option>
                 </optgroup>
-                <option value="surfacewater">Surface Water</option>
-                <option value="irrigationwater">Irrigation Water</option>
-                <option value="constructionwater">Construction Water</option>
+                <option value="SurfaceWater">Surface Water</option>
+                <option value="IrrigationWater">Irrigation Water</option>
+                <option value="ConstructionWater">Construction Water</option>
               </select>
             </div>
             <div className="input-group">

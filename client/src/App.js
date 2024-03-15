@@ -59,10 +59,7 @@ function App() {
             element={isLoggedIn ? <ClientForm onSubmit={handleSubmit} /> : <LoginPage onLogin={handleLogin} onCreateAccount={handleCreateAccount} />}
           />
 
-          <Route
-            path="/ticksheet"
-            element={<TickSheet />}
-          />
+          <Route path="/ticksheet/:index" element={<TickSheet />} />
 
           <Route
             path="/samplePage"
