@@ -11,6 +11,8 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [clientInfo, setClientInfo] = React.useState(null);
+
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -26,9 +28,11 @@ function App() {
   const handleCreateAccount = () => {
     setIsSignup(true);
   };
-  const handleSubmit = () => {
+  const handleSubmit = (formData) => {
     setIsSubmit(true);
     sessionStorage.setItem('isSubmit', 'true');
+
+    setClientInfo(formData);
   }
   useEffect(() => {
     // Check if the user is logged in when the component mounts
@@ -67,7 +71,7 @@ function App() {
           />
 
           <Route path="/" element={isLoggedIn ? <ClientForm /> : <Navigate to="/login" replace />} />
-
+          
         </Routes>
       </div>
     </Router>

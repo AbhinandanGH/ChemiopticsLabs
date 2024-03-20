@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 
 const ClientForm = ({ onSubmit }) => {
   const [setRedirect] = useState(false);
-   const [formData, setFormData] = useState({
-      name: '',
+  const [formData, setFormData] = useState({
+    name: '',
     numberofsamples: 1,
     samples: Array(1).fill({ sampleId: '', labCode: '' }),
     email: '',
@@ -42,12 +42,12 @@ const ClientForm = ({ onSubmit }) => {
     Decision: '',
   });
 
-  let name ,value;
+  let name, value;
   const handleInputs = (e) => {
-     console.log(e);
-    name=e.target.name;
-    value=e.target.value;
-    setFormData({...formData, [name]:value});
+    console.log(e);
+    name = e.target.name;
+    value = e.target.value;
+    setFormData({ ...formData, [name]: value });
 
   };
 
@@ -119,168 +119,160 @@ const ClientForm = ({ onSubmit }) => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e ) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-       const pdf = new jsPDF();
-    const docWidth = pdf.internal.pageSize.getWidth();
-    const index=0;
+      const pdf = new jsPDF();
+      const docWidth = pdf.internal.pageSize.getWidth();
+      const index = 0;
 
-    // Company Name
-    const companyName = "CHEMIOPTICS HEALTHCARE PVT LTD";
-    const companyNameWidth = pdf.getStringUnitWidth(companyName) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-    const companyNameX = (docWidth - companyNameWidth) / 2;
+      // Company Name
+      const companyName = "CHEMIOPTICS HEALTHCARE PVT LTD";
+      const companyNameWidth = pdf.getStringUnitWidth(companyName) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+      const companyNameX = (docWidth - companyNameWidth) / 2;
 
-    const testing = "(Testing Division)";
-    const testingWidth = pdf.getStringUnitWidth(testing) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-    const testingNameX = (docWidth - testingWidth) / 2;
- 
-
-    let yOffset = 10;
-    // // Print Address
-    // pdf.setFont("times", "roman");
-    // pdf.setFontSize(12);
-    // pdf.text(address, addressX, yOffset);
+      const testing = "(Testing Division)";
+      const testingWidth = pdf.getStringUnitWidth(testing) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+      const testingNameX = (docWidth - testingWidth) / 2;
 
 
+      let yOffset = 10;
+      // // Print Address
+      // pdf.setFont("times", "roman");
+      // pdf.setFontSize(12);
+      // pdf.text(address, addressX, yOffset);
 
 
 
-    // Print Company Name
-    pdf.setFont("times", "bold");
-    pdf.setFontSize(18);
-    pdf.text(companyName, companyNameX, yOffset);
-
-    // Adjust yOffset
-    yOffset += 15;
-
-    // Print testing
-    pdf.setFont("times", "bold");
-    pdf.setFontSize(18);
-    pdf.text(testing, testingNameX, yOffset);
-
-    // Adjust yOffset
-    yOffset += 10;
-
-    // Print Address
-    //     pdf.setFont("times", "roman");
-    // pdf.setFontSize(12);
-    // pdf.text(address, addressX, yOffset);
-
-    // Adjust yOffset
-    yOffset += 15;
-
-    // Print Client Information Form and Date
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(18);
-
-    pdf.text("Client Information", 10, yOffset);
-    pdf.setFontSize(12);
-
-    pdf.text(`Date:`, 10, yOffset + 10);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.collectedDate}`, 100, yOffset + 10);
-
-    // Print Time
-    pdf.setFont("times", "bold");
-    pdf.setFontSize(12);
-    pdf.text(`Time:`, 10, yOffset + 20);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.collectedTime}`, 100, yOffset + 20);
-
-    // Print other details
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Name:", 10, yOffset + 30);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.name}`, 100, yOffset + 30);
-    yOffset += 40;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Phone:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.phone}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Address Line1:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.address.line1}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Address Line2:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.address.line2}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Landmark:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.address.landmark}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Pincode:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.address.pincode}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Description of the sample:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.samples[index].sampleId}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Description of the sample:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.sample}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Sample Collection Date:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.sampleDate}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Time at which sample collected:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.sampleTime}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Sample Received and Inspected by:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.collectorName}`, 100, yOffset);
-    yOffset += 10;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Decision Rule/Statement of Conformity:", 10, yOffset);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${formData.Decision}`, 100, yOffset);
-    yOffset += 10;
 
 
-    // Print Examination of the sample
-    // pdf.text("Examination of the sample:", 10, yOffset);
-    // yOffset += 10;
-    // Object.entries(formData.examination).forEach(([key, value], index) => {
-    //   if (value) {
-    //     const label = document.querySelector(`label[for=${key}]`).textContent;
-    //     pdf.text(`- ${label}`, 20, yOffset + index * 10);
-    //   }
-    // });
-    yOffset += Object.keys(formData.examination).length * 3 + 3;
+      // Print Company Name
+      pdf.setFont("times", "bold");
+      pdf.setFontSize(18);
+      pdf.text(companyName, companyNameX, yOffset);
 
-    // Print Signatures
-    pdf.text("Client's Signature:", 10, yOffset);
-    pdf.text("__________________________", 10, yOffset + 10);
-    pdf.text("Collector's Signature:", 10, yOffset + 30);
-    pdf.text("__________________________", 10, yOffset + 40);
+      // Adjust yOffset
+      yOffset += 15;
 
-    // Save PDF
-    pdf.save('client_information.pdf');
+      // Print testing
+      pdf.setFont("times", "bold");
+      pdf.setFontSize(18);
+      pdf.text(testing, testingNameX, yOffset);
+
+      // Adjust yOffset
+      yOffset += 10;
+
+      // Print Address
+      //     pdf.setFont("times", "roman");
+      // pdf.setFontSize(12);
+      // pdf.text(address, addressX, yOffset);
+
+      // Adjust yOffset
+      yOffset += 15;
+
+      // Print Client Information Form and Date
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(18);
+
+      pdf.text("Client Information", 10, yOffset);
+      pdf.setFontSize(12);
+
+      pdf.text(`Date:`, 10, yOffset + 10);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.collectedDate}`, 100, yOffset + 10);
+
+      // Print Time
+      pdf.setFont("times", "bold");
+      pdf.setFontSize(12);
+      pdf.text(`Time:`, 10, yOffset + 20);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.collectedTime}`, 100, yOffset + 20);
+
+      pdf.setFontSize(12);
+      // Print other details
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Name:", 10, yOffset + 30);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.name}`, 100, yOffset + 30);
+      yOffset += 40;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Phone:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.phone}`, 100, yOffset);
+      yOffset += 10;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Address Line1:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.address.line1}`, 100, yOffset);
+      yOffset += 10;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Address Line2:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.address.line2}`, 100, yOffset);
+      yOffset += 10;
+
+
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Pincode:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.address.pincode}`, 100, yOffset);
+      yOffset += 10;
+
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Description of the sample:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.sample}`, 100, yOffset);
+      yOffset += 10;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Sample Collection Date:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.sampleDate}`, 100, yOffset);
+      yOffset += 10;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Time at which sample collected:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.sampleTime}`, 100, yOffset);
+      yOffset += 10;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Sample Received and Inspected by:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.collectorName}`, 100, yOffset);
+      yOffset += 10;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Decision Rule/Statement of Conformity:", 10, yOffset);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${formData.Decision}`, 100, yOffset);
+      yOffset += 10;
+
+
+      // Print Examination of the sample
+      // pdf.text("Examination of the sample:", 10, yOffset);
+      // yOffset += 10;
+      // Object.entries(formData.examination).forEach(([key, value], index) => {
+      //   if (value) {
+      //     const label = document.querySelector(`label[for=${key}]`).textContent;
+      //     pdf.text(`- ${label}`, 20, yOffset + index * 10);
+      //   }
+      // });
+      yOffset += Object.keys(formData.examination).length * 3 + 3;
+
+      // Print Signatures
+
+      pdf.text("Collector's Signature:", 10, yOffset + 30);
+      pdf.text("__________________________", 10, yOffset + 40);
+
+      // Save PDF
+      const fileName = `Client_Ack_${formData.name}.pdf`;
+      pdf.save(fileName);
 
       // Send form data to the server
       const response = await fetch('http://localhost:3000/api/submitForm', {
@@ -290,13 +282,13 @@ const ClientForm = ({ onSubmit }) => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       // Check if the server successfully stored the data
       if (response.ok) {
         console.log('Form data stored successfully!');
-  
+
         // Redirect to the desired URL after successful form submission
-      //  window.location.href = 'http://localhost:3001/ticksheet'; // Replace with your desired URL
+        //  window.location.href = 'http://localhost:3001/ticksheet'; // Replace with your desired URL
       } else {
         console.error('Error storing form data:', response.statusText);
       }
@@ -304,23 +296,25 @@ const ClientForm = ({ onSubmit }) => {
       console.error('Error sending form data to server:', error);
     }
 
-   
+
 
     // onSubmit();
     // navigate('/ticksheet')
 
     localStorage.setItem('samplesData', JSON.stringify(formData.samples));
-
+    localStorage.setItem('formData', JSON.stringify(formData));
     // Redirect to SamplePage component after successful form submission
     navigate('/samplePage');
-};
+    // navigate('/samplePage', { state: { clientInfo: formData } });
+     navigate('/samplePage', { state: { name: formData.name } });
+  };
 
-// if (redirect) {
-//   return <SamplePage samples={formData.samples} />;
-// }
+  // if (redirect) {
+  //   return <SamplePage samples={formData.samples} />;
+  // }
 
   return (
-    <div className="container">
+    <div className="client-form-container">
       <form id="clientForm" onSubmit={handleSubmit}>
         <h1>CHEMIOPTICS HEALTHCARE PVT LTD</h1>
         <h2>(Testing Division)</h2>
@@ -623,9 +617,9 @@ const ClientForm = ({ onSubmit }) => {
         <div className="input-group">
           <input type="hidden" name="currentDate" value={formData.collectedDate = getCurrentDate()} />
           <input type="hidden" name="currentTime" value={formData.collectedTime = getCurrentTime()} />
-          <input type="submit" value="Submit"/>
+          <input type="submit" value="Submit" />
         </div>
-        
+
       </form>
     </div>
   );

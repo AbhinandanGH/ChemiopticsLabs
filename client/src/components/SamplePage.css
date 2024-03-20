@@ -1,31 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
 
 /* Styling for the header */
-h2 {
-  font-size: 28px;
-  color: #3498db;
+h1 {
   text-align: center;
-  margin-bottom: 20px;
-  text-align: center;
+  margin-bottom: 5px;
+  color: #5fc7c6;
+  text-shadow: 2px 2px 4px #000;
+
+  font-family: "Merriweather", serif;
+  font-weight: 900;
+  font-style: normal;
 }
+
+
 
 /* Styling for the sample list */
 .samplePage ul {
   list-style-type: none;
   padding-left: 200px;
   padding-right: 200px;
-
 }
 
 /* Styling for each sample item */
 .samplePage li {
   margin-bottom: 20px;
-  padding: 15px;
+  padding: 20px;
   border: 2px solid #3498db;
   border-radius: 8px;
   background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+}
+
+.sampleDescription div {
+  display: flex; /* Display labCode and its value on a new line */
+  flex-direction: row; 
+  margin: 10px 10px;
+}
+
+.sampleDescription {
+  display: flex;
+  flex-direction: column; /* Change flex direction to column */
+  justify-content: flex-start; /* Align items to the start (top) */
+  align-items: flex-start; /* Align items to the start (left) */
+  
+}
+
+.sampleDescription p {
+  margin: 0; /* Remove default margins */
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+.sampleDescription #testPrice {
+  align-self: flex-end; /* Align testPrice to the end (right) */
+  position: absolute;
+}
+
+.sampleDescription #labcode {
+  align-self: flex-start; /* Align labCode to the start (left) */
 }
 
 /* Styling for hover effect on sample items */
@@ -36,22 +72,42 @@ h2 {
 
 /* Styling for links */
 .samplePage a {
-  color: #2980b9;
+  color: #030303;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 /* Styling for hover effect on links */
 .samplePage a:hover {
-  color: #1a5276;
-  text-decoration: underline;
+  color: #59a6d6;
+  
+}
+
+.samplePage p {
+ 
+  font-family: "Merriweather", serif;
+  font-style: normal;
 }
 
 .sample-page-title {
-
   text-align: center;
   font-size: 30px;
-
+}
+.sampleTotal {
+  margin-top: 20px; /* Adjust as needed */
+  padding: 10px;
+  background-color: #f0f0f0; /* Background color */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 5px; /* Rounded corners */
+  font-weight: bold; /* Bold text */
+  display: flex; /* Use flexbox */
+  justify-content: flex-end; /* Align content to the end (right) */
+  flex-direction: column;
+  margin: 3vw 10vw;
+  text-align: right;
+}
+.sampleTotal > div {
+  margin : 10px 10px /* Adjust the value as needed */
 }
 
 /* Animation for sample items */
@@ -72,19 +128,20 @@ h2 {
 }
 
 /* Styling for sample ID */
-.samplePage  .sample-id {
+.samplePage .sample-id {
   font-weight: bold;
   color: #e74c3c;
 }
 
 /* Styling for lab code */
-.samplePage  .lab-code {
+.samplePage .lab-code {
   font-style: italic;
   color: #7f8c8d;
 }
 
 /* Container styling */
-.samplePage  .container {
+.samplePage .container {
   max-width: 100px; /* Adjust the max-width as needed */
   margin: 0 auto;
 }
+

@@ -44,17 +44,33 @@ const FormData = mongoose.model('FormData', {
       Decision: String,
 });
 
+// Create another MongoDB model for samples
+const Sample = mongoose.model('Sample', {
+  sampleId: String,
+  labCode: String,
+});
+
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
 
 // Endpoint to handle form submissions
 app.post('/api/submitForm', async (req, res) => {
   try {
-    // Create a new instance of your model with the submitted data
-    const formData = new FormData(req.body);
+    const formData = req.body;
+    
+    // Extract samples from form data
+    const { samples, ...formDataWithoutSamples } = formData;
 
-    // Save the data to MongoDB
-    await formData.save();
+    // Create a new instance of the FormData model with the submitted data (excluding samples)
+    const formDataInstance = new FormData(formDataWithoutSamples);
+
+    // Save the form data to MongoDB
+    await formDataInstance.save();
+
+    // Save samples separately
+    if (samples && samples.length > 0) {
+      await Sample.insertMany(samples); // Save all samples in one go
+    }
 
     // Respond with a success message
     res.status(200).json({ message: 'Form data stored successfully!' });
@@ -63,6 +79,7 @@ app.post('/api/submitForm', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // Start the server
 app.listen(port, () => {
