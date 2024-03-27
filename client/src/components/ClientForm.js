@@ -298,13 +298,13 @@ const ClientForm = ({ onSubmit }) => {
 
 
 
-    // onSubmit();
+     onSubmit();
     // navigate('/ticksheet')
 
     localStorage.setItem('samplesData', JSON.stringify(formData.samples));
     localStorage.setItem('formData', JSON.stringify(formData));
     // Redirect to SamplePage component after successful form submission
-    navigate('/samplePage');
+    //navigate('/samplePage');
     // navigate('/samplePage', { state: { clientInfo: formData } });
      navigate('/samplePage', { state: { name: formData.name } });
   };
@@ -321,7 +321,7 @@ const ClientForm = ({ onSubmit }) => {
         <h2>Client Information Form</h2>
 
         <div className="input-group">
-          <label htmlFor="name">Sample Identifier (Mr./Mrs./Ms.):</label>
+          <label htmlFor="name" className="required" >Sample Identifier (Mr./Mrs./Ms.):</label>
           <input
             type="text"
             id="name"
@@ -332,7 +332,7 @@ const ClientForm = ({ onSubmit }) => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="addressLine1">Address Line 1:</label>
+          <label htmlFor="addressLine1"  className="required" >Address Line 1:</label>
           <input
             type="text"
             id="addressLine1"
@@ -342,15 +342,15 @@ const ClientForm = ({ onSubmit }) => {
             required />
         </div>
         <div className="input-group">
-          <label htmlFor="addressLine2">Address Line 2:</label>
+          <label htmlFor="addressLine2" className="required" >Address Line 2:</label>
           <input type="text" id="addressLine2" name="line2" value={formData.addressline2} onChange={handleChange} required />
         </div>
         <div className="input-group">
           <label htmlFor="landmark">Landmark:</label>
           <input type="text" id="landmark" name="landmark" value={formData.landmark} onChange={handleChange} />
         </div>
-        <div className="input-group">
-          <label htmlFor="pincode">Pincode:</label>
+        <div className="input-group" >
+          <label htmlFor="pincode" className="required" >Pincode:</label>
           <input
             type="text"
             id="pincode"
@@ -363,7 +363,7 @@ const ClientForm = ({ onSubmit }) => {
         </div>
 
         <div className="input-group">
-          <label htmlFor="phone">Phone Number:</label>
+          <label htmlFor="phone" className="required" >Phone Number:</label>
           <input
             type="tel"
             id="phone"
@@ -375,7 +375,7 @@ const ClientForm = ({ onSubmit }) => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email" >Email:</label>
           <input
             type="email"
             id="email"
@@ -387,7 +387,7 @@ const ClientForm = ({ onSubmit }) => {
         </div>
 
         <div className="input-group">
-          <label htmlFor="numberofsamples">Number of Samples:</label>
+          <label htmlFor="numberofsamples" className="required" >Number of Samples:</label>
           <select
             id="numberofsamples"
             name="numberofsamples"
@@ -405,7 +405,7 @@ const ClientForm = ({ onSubmit }) => {
         {formData.samples.map((sample, index) => (
           <div key={index}>
             <div className="input-group">
-              <label htmlFor={`sampleId${index + 1}`}>Sample ID {index + 1}:</label>
+              <label htmlFor={`sampleId${index + 1}`} className="required">Sample ID {index + 1}:</label>
               <select
                 id={`sampleId${index + 1}`}
                 name={`sampleId${index + 1}`}
@@ -433,7 +433,7 @@ const ClientForm = ({ onSubmit }) => {
               </select>
             </div>
             <div className="input-group">
-              <label htmlFor={`labCode${index + 1}`}>Lab Code {index + 1}:</label>
+              <label htmlFor={`labCode${index + 1}`}className="required">Lab Code {index + 1}:</label>
               <input
                 type="text"
                 pattern='chpl[0-9]{1,9}|CHPL[0-9]{1,9}'
@@ -449,7 +449,7 @@ const ClientForm = ({ onSubmit }) => {
         ))}
 
         <div className="input-group">
-          <label htmlFor="sample">Description of the sample:</label>
+          <label htmlFor="sample" className="required" >Description of the sample:</label>
           <select
             id="sample"
             name="sample"
@@ -473,7 +473,7 @@ const ClientForm = ({ onSubmit }) => {
           </select>
         </div>
         <div className="input-group">
-          <label htmlFor="sampleDate">Sample Collection Date:</label>
+          <label htmlFor="sampleDate" className="required" >Sample Collection Date:</label>
           <input
             type="date"
             id="sampleDate"
@@ -485,7 +485,7 @@ const ClientForm = ({ onSubmit }) => {
         </div>
 
         <div className="input-group">
-          <label htmlFor="sampleTime">Time at which sample collected:</label>
+          <label htmlFor="sampleTime" className="required" >Time at which sample collected:</label>
           <input
             type="time"
             id="sampleTime"
@@ -569,7 +569,7 @@ const ClientForm = ({ onSubmit }) => {
         </div>
 
         <div className="input-group">
-          <label htmlFor="collectorName">Sample inspected and received by:</label>
+          <label htmlFor="collectorName" className="required" >Sample inspected and received by:</label>
           <input
             type="text"
             id="collectorName"
@@ -582,7 +582,7 @@ const ClientForm = ({ onSubmit }) => {
 
         <div className="input-group">
           <fieldset>
-            <legend><b>Decision Rule/Statement Of Conformity:</b></legend>
+            <legend className="required" ><b>Decision Rule/Statement Of Conformity:</b></legend>
             <div className='Radio'>
               {/* Required Radio Button */}
               <label htmlFor="Required">

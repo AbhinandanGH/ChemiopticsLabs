@@ -32,7 +32,7 @@ function App() {
     setIsSubmit(true);
     sessionStorage.setItem('isSubmit', 'true');
 
-    setClientInfo(formData);
+    //setClientInfo(formData);
   }
   useEffect(() => {
     // Check if the user is logged in when the component mounts

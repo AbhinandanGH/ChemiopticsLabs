@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import axios from "axios"
+import { useNavigate, Link } from "react-router-dom"
 import './LoginPage.css';
-import { useNavigate } from 'react-router-dom';
+
 
 const LoginPage = ({ onLogin, onCreateAccount }) => {
     const [username, setUsername] = useState('');
@@ -8,9 +10,11 @@ const LoginPage = ({ onLogin, onCreateAccount }) => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const history=useNavigate();
+
+    async function handleLogin (e) {
         e.preventDefault();
-        // Perform authentication
+       // Perform authentication
         if (username === 'admin' && password === 'password') {
             onLogin();
             navigate('/client-form');
@@ -22,6 +26,8 @@ const LoginPage = ({ onLogin, onCreateAccount }) => {
         else {
             setError('Invalid username or password');
         }
+
+       
     };
 
     const handleCreateAccount = () => {
@@ -32,7 +38,7 @@ const LoginPage = ({ onLogin, onCreateAccount }) => {
         <div className="login-container">
             <h2>Login</h2>
             {error && <div className="error">{error}</div>}
-            <form onSubmit={handleLogin}>
+            <form action="POST" onSubmit={handleLogin}>
                 <div className="input-group">
                     <label htmlFor="username">Username:</label>
                     <input

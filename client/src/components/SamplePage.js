@@ -19,7 +19,6 @@ const SamplePage = () => {
   };
 
 
-
   const handleGenerateBill = () => {
     const pdf = new jsPDF({
       orientation: "landscape",
@@ -47,10 +46,16 @@ const SamplePage = () => {
 
     pdf.setFont("helvetica", "normal");
     pdf.text(customerName, 10, 30);
+
+    // Set the font size
+    const smallFontSize = 10;
+    pdf.setFontSize(smallFontSize);
+
     pdf.text(cin, 250, 35, { align: "right" });
     pdf.text(gstin, 250, 40, { align: "right" });
     pdf.text(customerNo, 250, 45, { align: "right" });
     pdf.text(invoiceNo, 250, 50, { align: "right" });
+
 
     const centerPosX = pdf.internal.pageSize.getWidth() / 2;
 
@@ -91,14 +96,6 @@ const SamplePage = () => {
       tableRowYOffset += 7;
     });
 
-    // const totalPrice = samples.reduce((acc, sample) => {
-    //   const samplePrice = GetTestPrice(sample.sampleId);
-    //   return acc + samplePrice;
-    // }, 0);
-
-    // const cgst = ((totalPrice * 9) / 100).toFixed(2);
-    // const sgst = ((totalPrice * 9) / 100).toFixed(2);
-
     const tableFooterYOffset = tableRowYOffset + 10;
     const rightAlignedXPosition = pdf.internal.pageSize.getWidth() - 10;
 
@@ -123,7 +120,8 @@ const SamplePage = () => {
     pdf.text("INR", rightAlignedXPosition - inrOffset, tableFooterYOffset + 3 * textOffset);
     pdf.text(`${totalaftertax}`, rightAlignedXPosition - inrOffset - numberOffset, tableFooterYOffset + 3 * textOffset);
 
-    pdf.save("bill.pdf");
+    const fileName = `bill_${name}.pdf`;
+    pdf.save(fileName);
   };
 
 

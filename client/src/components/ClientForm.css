@@ -6,7 +6,12 @@ body {
     padding: 0;
     background-color: rgba(230, 223, 223, 0.716) !important;
 }
-
+.required::after {
+    content: "*"; /* Add asterisk as content */
+    color: red; /* Set color to red */
+    margin-left: 5px; /* Add some space between the input and the asterisk */
+  }
+  
 .client-form-container {
     max-width: 800px;
     margin: 50px auto;

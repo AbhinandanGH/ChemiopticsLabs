@@ -127,7 +127,7 @@ const Ticksheet = () => {
     if (checkbox && !checkbox.checked) {
       checkbox.checked = true; // Set the checked property to true
       handleCheckboxChange(`Parameter ${rowNumber}`); // Call handleCheckboxChange with a parameter (you can replace it with the actual parameter name)
-      console.log(`Row ${rowNumber} is selected.`); // Log a message to the console
+      //console.log(`Row ${rowNumber} is selected.`); // Log a message to the console
     }
   };
 
