@@ -15,6 +15,7 @@ h1 {
 
 
 
+
 /* Styling for the sample list */
 .samplePage ul {
   list-style-type: none;
@@ -145,3 +146,8 @@ h1 {
   margin: 0 auto;
 }
 
+.billButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

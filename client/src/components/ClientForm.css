@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: rgba(230, 223, 223, 0.716) !important;
+    
 }
 .required::after {
     content: "*"; /* Add asterisk as content */

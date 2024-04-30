@@ -1,29 +1,42 @@
-// ticksheet.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './ticksheet.css';
+import { Link } from 'react-router-dom';
 
 const Ticksheet = () => {
-  const [selectedParameters, setSelectedParameters] = useState([]);
   const [samples, setSamples] = useState([]);
-  const navigate = useNavigate(); // Use useNavigate for navigation
-  const location = useLocation(); // Use useLocation to access location object
-  const sample = location.state; // Extract sample object from location state
+  const [selectedParameters, setSelectedParameters] = useState([]);
+  const [manuallySelectedParameters, setManuallySelectedParameters] = useState([]); // New state
+  const navigate = useNavigate();
+  const location = useLocation();
+  const sample = location.state;
 
   useEffect(() => {
-    // Retrieve samples data from localStorage
     const storedSamples = JSON.parse(localStorage.getItem('samplesData')) || [];
     setSamples(storedSamples);
 
-    // Retrieve the sampleId from localStorage
-    const sampleId = localStorage.getItem('selectedSampleId');
+    
 
-    // If sampleId exists, select parameters based on it
+    const sampleId = localStorage.getItem('selectedSampleId');
+    const labCode = localStorage.getItem('selectedLabCode');
+
     if (sampleId) {
       selectWaterBasedOnSampleId(sampleId);
     }
+
+    const storedManuallySelectedParameters = JSON.parse(localStorage.getItem('manuallySelectedParameters')) || [];
+    setManuallySelectedParameters(storedManuallySelectedParameters);
   }, []);
+
+ 
+   useEffect(() => {
+    const storedSelectedParameters = JSON.parse(localStorage.getItem('selectedParameters')) || [];
+    setSelectedParameters(storedSelectedParameters);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('selectedParameters', JSON.stringify(selectedParameters));
+  }, [selectedParameters]);
 
   const handleCheckboxChange = (parameter) => {
     setSelectedParameters((prevSelected) => {
@@ -34,6 +47,7 @@ const Ticksheet = () => {
       }
     });
   };
+
 
   const selectWaterBasedOnSampleId = (sampleId) => {
     // Implement logic to automatically select parameters based on sampleId
@@ -131,9 +145,9 @@ const Ticksheet = () => {
     }
   };
 
+ 
   const navigateToSamplePage = () => {
-    // Navigate back to the SamplePage component
-    navigate('/samplePage');
+    navigate('/samplePage', { state: { name: sample && sample.name } });
   };
 
   return (  // JSX structure representing the component's UI
@@ -152,12 +166,15 @@ const Ticksheet = () => {
       </ul>
        </div> */}
 
-      {sample && (
+{sample && (
         <div>
           <p>Sample ID: {sample.sampleId}</p>
           <p>Lab Code: {sample.labCode}</p>
         </div>
       )}
+   
+        
+    
 
 
 

@@ -1,132 +1,145 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import "./SamplePage.css";
 
 const SamplePage = () => {
   const location = useLocation();
-  const name = location.state && location.state.name;
+  const [name, setName] = useState('');
   const [samples, setSamples] = useState([]);
 
   useEffect(() => {
     const storedSamples = JSON.parse(localStorage.getItem("samplesData")) || [];
     setSamples(storedSamples);
+
+    // Fetch the most recently stored name from the server
+    fetch('/api/getName')
+      .then(response => response.json())
+      .then(data => {
+        if (data.name) {
+          setName(data.name);
+        } else {
+          console.error('Error: Name not found in response');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching name:', error);
+      });
   }, []);
 
-  const handleSampleClick = (sampleId) => {
+  const handleSampleClick = (sampleId, labCode) => {
     localStorage.setItem("selectedSampleId", sampleId);
+    localStorage.setItem("selectedLabCode", labCode);
   };
 
-
   const handleGenerateBill = () => {
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: [297, 210],
+    const pdf = new jsPDF({ // Creating a new instance of jsPDF
+      orientation: "landscape", // Setting orientation to landscape
+      unit: "mm", // Setting unit to millimeter
+      format: [297, 210], // Setting page format to A4
     });
 
-    const companyName = "CHEMIOPTICS LABS";
+    const companyName = "CHEMIOPTICS LABS"; // Setting company name
     const companyAddress =
-      "R.H.KULKARNI COMPLEX, BVB COLLEGE CAMPUS\nVIDYANAGAR, HUBLI DHARWAD, KARNATAKA 580031";
+      "R.H.KULKARNI COMPLEX, BVB COLLEGE CAMPUS\nVIDYANAGAR, HUBLI DHARWAD, KARNATAKA 580031"; // Setting company address
 
-    const billDate = new Date().toLocaleDateString("en-IN", {
+    const billDate = new Date().toLocaleDateString("en-IN", { // Getting current date in Indian English format
       day: "numeric",
       month: "short",
       year: "numeric",
     });
-    const customerName = "To, " + name;
-    const cin = "CIN: UBSIDOTG2019PTC138544";
-    const gstin = "GSTIN: 29AAICC4517DIZS";
-    const customerNo = "CUSTOMER No: 1025";
-    const invoiceNo = "TAX INVOICE NO: CHPL";
+    const customerName = "To, " + name; // Setting customer name using fetched name
+    const cin = "CIN: UBSIDOTG2019PTC138544"; // Setting CIN
+    const gstin = "GSTIN: 29AAICC4517DIZS"; // Setting GSTIN
+    const customerNo = "CUSTOMER No: 1025"; // Setting customer number
+    const invoiceNo = "TAX INVOICE NO: CHPL"; // Setting invoice number
 
-    pdf.setFontSize(14);
-    pdf.text(`DATE: ${billDate}`, 270, 10, { align: "right" });
+    pdf.setFontSize(14); // Setting font size
+    pdf.text(`DATE: ${billDate}`, 270, 10, { align: "right" }); // Adding bill date to PDF
 
-    pdf.setFont("helvetica", "normal");
-    pdf.text(customerName, 10, 30);
+    pdf.setFont("helvetica", "normal"); // Setting font to normal
+    pdf.text(customerName, 10, 30); // Adding customer name to PDF
 
-    // Set the font size
+    // Setting the font size for additional information
     const smallFontSize = 10;
     pdf.setFontSize(smallFontSize);
 
+    // Adding additional information to PDF
     pdf.text(cin, 250, 35, { align: "right" });
     pdf.text(gstin, 250, 40, { align: "right" });
     pdf.text(customerNo, 250, 45, { align: "right" });
     pdf.text(invoiceNo, 250, 50, { align: "right" });
 
+    const centerPosX = pdf.internal.pageSize.getWidth() / 2; // Calculating center position of page
 
-    const centerPosX = pdf.internal.pageSize.getWidth() / 2;
-
-    pdf.setFontSize(14);
-    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(14); // Setting font size for company name
+    pdf.setFont("helvetica", "bold"); // Setting font to bold for company name
     const companyNameY = 10;
-    pdf.text(companyName, centerPosX, companyNameY, { align: "center" });
+    pdf.text(companyName, centerPosX, companyNameY, { align: "center" }); // Adding company name to PDF
 
-    pdf.setFontSize(10);
-    const lines = pdf.splitTextToSize(companyAddress, pdf.internal.pageSize.getWidth() - 20);
+    pdf.setFontSize(10); // Setting font size for company address
+    const lines = pdf.splitTextToSize(companyAddress, pdf.internal.pageSize.getWidth() - 20); // Splitting address lines
     const addressHeight = lines.length * 5;
     const addressY = companyNameY + 5;
-    pdf.text(lines, centerPosX, addressY, { align: "center" });
+    pdf.text(lines, centerPosX, addressY, { align: "center" }); // Adding company address to PDF
 
-    const tableHeaders = ["S.No", "DESCRIPTION", "AMOUNT (In Rs)"];
-    const tableHeaderXOffsets = [10, 40, 140];
-    const tableHeaderYOffset = 60;
+    const tableHeaders = ["S.No", "DESCRIPTION", "AMOUNT (In Rs)"]; // Defining table headers
+    const tableHeaderXOffsets = [10, 40, 140]; // Defining table header X offsets
+    const tableHeaderYOffset = 60; // Defining table header Y offset
 
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "bold");
-    tableHeaders.forEach((header, index) => {
+    pdf.setFontSize(10); // Setting font size for table headers
+    pdf.setFont("helvetica", "bold"); // Setting font to bold for table headers
+    tableHeaders.forEach((header, index) => { // Adding table headers to PDF
       pdf.text(header, tableHeaderXOffsets[index], tableHeaderYOffset);
     });
 
-    let tableRowYOffset = tableHeaderYOffset + 5;
-    samples.forEach((sample, rowIndex) => {
-      const slNo = rowIndex + 1;
-      const description = ` ${sample.sampleId}`;
-      const amount = GetTestPrice(sample.sampleId);
+    let tableRowYOffset = tableHeaderYOffset + 5; // Initializing table row Y offset
+    samples.forEach((sample, rowIndex) => { // Iterating over samples
+      const slNo = rowIndex + 1; // Calculating serial number
+      const description = ` ${sample.sampleId}`; // Generating sample description
+      const amount = GetTestPrice(sample.sampleId); // Getting test price
 
-      pdf.setFont("helvetica", "normal");
-      pdf.text(slNo.toString(), tableHeaderXOffsets[0], tableRowYOffset);
-      pdf.text(description, tableHeaderXOffsets[1], tableRowYOffset, {
+      pdf.setFont("helvetica", "normal"); // Setting font to normal for table content
+      pdf.text(slNo.toString(), tableHeaderXOffsets[0], tableRowYOffset); // Adding serial number to PDF
+      pdf.text(description, tableHeaderXOffsets[1], tableRowYOffset, { // Adding description to PDF
         width: 80,
         align: "left",
       });
-      pdf.text(amount.toString(), tableHeaderXOffsets[2], tableRowYOffset);
-      tableRowYOffset += 7;
+      pdf.text(amount.toString(), tableHeaderXOffsets[2], tableRowYOffset); // Adding amount to PDF
+      tableRowYOffset += 7; // Incrementing table row Y offset
     });
 
-    const tableFooterYOffset = tableRowYOffset + 10;
-    const rightAlignedXPosition = pdf.internal.pageSize.getWidth() - 10;
+    const tableFooterYOffset = tableRowYOffset + 10; // Calculating table footer Y offset
+    const rightAlignedXPosition = pdf.internal.pageSize.getWidth() - 10; // Calculating right-aligned X position
 
-    const textOffset = 10;
-    const inrOffset = 100;
-    const numberOffset = -8;
-
+    // Adding total (before tax) to PDF
     pdf.text("Total (Before Tax):", rightAlignedXPosition - 150, tableFooterYOffset);
-    pdf.text("INR", rightAlignedXPosition - inrOffset, tableFooterYOffset);
-    pdf.text(`${total.toFixed(2)}`, rightAlignedXPosition - inrOffset - numberOffset, tableFooterYOffset);
+    pdf.text("INR", rightAlignedXPosition - 100, tableFooterYOffset);
+    pdf.text(`${total.toFixed(2)}`, rightAlignedXPosition - 92, tableFooterYOffset);
 
-    pdf.text("CGST (9%)", rightAlignedXPosition - 150, tableFooterYOffset + textOffset);
-    pdf.text("INR", rightAlignedXPosition - inrOffset, tableFooterYOffset + textOffset);
-    pdf.text(`${cgst}`, rightAlignedXPosition - inrOffset - numberOffset, tableFooterYOffset + textOffset);
+    // Adding CGST to PDF
+    pdf.text("CGST (9%)", rightAlignedXPosition - 150, tableFooterYOffset + 10);
+    pdf.text("INR", rightAlignedXPosition - 100, tableFooterYOffset + 10);
+    pdf.text(`${cgst}`, rightAlignedXPosition - 92, tableFooterYOffset + 10);
 
-    pdf.text("SGST (9%)", rightAlignedXPosition - 150, tableFooterYOffset + 2 * textOffset);
-    pdf.text("INR", rightAlignedXPosition - inrOffset, tableFooterYOffset + 2 * textOffset);
-    pdf.text(`${sgst}`, rightAlignedXPosition - inrOffset - numberOffset, tableFooterYOffset + 2 * textOffset);
+    // Adding SGST to PDF
+    pdf.text("SGST (9%)", rightAlignedXPosition - 150, tableFooterYOffset + 20);
+    pdf.text("INR", rightAlignedXPosition - 100, tableFooterYOffset + 20);
+    pdf.text(`${sgst}`, rightAlignedXPosition - 92, tableFooterYOffset + 20);
 
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Grand Total:", rightAlignedXPosition - 150, tableFooterYOffset + 3 * textOffset);
-    pdf.text("INR", rightAlignedXPosition - inrOffset, tableFooterYOffset + 3 * textOffset);
-    pdf.text(`${totalaftertax}`, rightAlignedXPosition - inrOffset - numberOffset, tableFooterYOffset + 3 * textOffset);
+    pdf.setFont("helvetica", "bold"); // Setting font to bold for grand total
+    // Adding grand total to PDF
+    pdf.text("Grand Total:", rightAlignedXPosition - 150, tableFooterYOffset + 30);
+    pdf.text("INR", rightAlignedXPosition - 100, tableFooterYOffset + 30);
+    pdf.text(`${totalaftertax}`, rightAlignedXPosition - 92, tableFooterYOffset + 30);
 
-    const fileName = `bill_${name}.pdf`;
-    pdf.save(fileName);
+    const fileName = `bill_${name}.pdf`; // Generating file name
+    pdf.save(fileName); // Saving PDF with the given file name
   };
 
-
-  const GetTestPrice = (sampleId) => {
+  const GetTestPrice = (sampleId) => { // Function to get test price based on sample ID
     switch (sampleId) {
+      // Define test prices for different sample IDs
       case "WasteWaterPremium":
         return 2000;
       case "WasteWaterComplete":
@@ -149,16 +162,16 @@ const SamplePage = () => {
         break;
     }
   };
-  const total = samples.reduce((acc, sample) => {
+
+  const total = samples.reduce((acc, sample) => { // Calculating total price
     const samplePrice = GetTestPrice(sample.sampleId);
     return acc + samplePrice;
   }, 0);
 
-  // Calculate CGST and SGST
-  const cgst = (total * 0.09).toFixed(2); // 9% CGST
-  const sgst = (total * 0.09).toFixed(2); // 9% SGST
-
-  const totalaftertax = (parseFloat(total) + parseFloat(cgst) + parseFloat(sgst)).toFixed(2); // Total after tax
+  // Calculating CGST and SGST
+  const cgst = (total * 0.09).toFixed(2);
+  const sgst = (total * 0.09).toFixed(2);
+  const totalaftertax = (parseFloat(total) + parseFloat(cgst) + parseFloat(sgst)).toFixed(2);
 
   return (
     <div className="samplePage">
@@ -168,7 +181,7 @@ const SamplePage = () => {
       </div>
 
       <ul>
-        {samples.map((sample, index) => (
+        {samples.map((sample, index) => ( // Mapping over samples to display each sample
           <Link
             key={index}
             to={{
@@ -176,7 +189,7 @@ const SamplePage = () => {
               state: { sample },
             }}
           >
-            <li onClick={() => handleSampleClick(sample.sampleId)}>
+            <li onClick={() => handleSampleClick(sample.sampleId, sample.labCode)}>
               <div className="sampleDescription">
                 <div>
                   Sample ID {index + 1}: <p>{sample.sampleId}</p>
@@ -190,14 +203,16 @@ const SamplePage = () => {
           </Link>
         ))}
       </ul>
-      <div className="sampleTotal" >
-
+      <div className="sampleTotal">
         <div id="total">Total: INR {total}</div>
         <div id="cgst">CGST (9%): INR {cgst}</div>
         <div id="sgst">SGST (9%): INR {sgst}</div>
         <div id="totalaftertax">Grand Total: INR {totalaftertax}</div>
-        <button onClick={handleGenerateBill}>Generate Bill</button>
       </div>
+      <div className="billButton">
+      <button onClick={handleGenerateBill}>Generate Bill</button> {/* Button to generate bill */}
+      </div>
+      
     </div>
   );
 };
