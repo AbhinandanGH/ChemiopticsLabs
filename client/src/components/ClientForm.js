@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 import './ClientForm.css';
 import { useNavigate } from 'react-router-dom';
 
-
 const ClientForm = ({ onSubmit }) => {
-  const [setRedirect] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     numberofsamples: 1,
@@ -42,13 +40,9 @@ const ClientForm = ({ onSubmit }) => {
     Decision: '',
   });
 
-  let name, value;
   const handleInputs = (e) => {
-    console.log(e);
-    name = e.target.name;
-    value = e.target.value;
+    const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
   };
 
   const handleChange = (e, index, field) => {
@@ -124,6 +118,8 @@ const ClientForm = ({ onSubmit }) => {
     try {
       const pdf = new jsPDF();
       const docWidth = pdf.internal.pageSize.getWidth();
+
+
       const index = 0;
 
       // Company Name
@@ -286,9 +282,6 @@ const ClientForm = ({ onSubmit }) => {
       // Check if the server successfully stored the data
       if (response.ok) {
         console.log('Form data stored successfully!');
-
-        // Redirect to the desired URL after successful form submission
-        //  window.location.href = 'http://localhost:3001/ticksheet'; // Replace with your desired URL
       } else {
         console.error('Error storing form data:', response.statusText);
       }
@@ -296,23 +289,11 @@ const ClientForm = ({ onSubmit }) => {
       console.error('Error sending form data to server:', error);
     }
 
+    onSubmit();
 
-
-     onSubmit();
-    // navigate('/ticksheet')
-
-    localStorage.setItem('samplesData', JSON.stringify(formData.samples));
-    localStorage.setItem('formData', JSON.stringify(formData));
-    // Redirect to SamplePage component after successful form submission
-    //navigate('/samplePage');
-    // navigate('/samplePage', { state: { clientInfo: formData } });
-     navigate('/samplePage', { state: { name: formData.name } });
+    navigate('/samplePage', { state: { name: formData.name } });
   };
-
-  // if (redirect) {
-  //   return <SamplePage samples={formData.samples} />;
-  // }
-
+  
   return (
     <div className="client-form-container">
       <form id="clientForm" onSubmit={handleSubmit}>

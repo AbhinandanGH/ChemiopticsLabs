@@ -7,21 +7,43 @@ body {
     background-color: rgba(230, 223, 223, 0.716) !important;
     
 }
+html{
+    background: url('1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100%; /* Ensure HTML fills the viewport height */
+}
+.page{
+    background: url(1.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
 .required::after {
     content: "*"; /* Add asterisk as content */
     color: red; /* Set color to red */
     margin-left: 5px; /* Add some space between the input and the asterisk */
   }
   
-.client-form-container {
+  .client-form-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     max-width: 800px;
-    margin: 50px auto;
+    width: calc(100% - 40px); /* subtract padding from width */
+    margin: 0 auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-
+    overflow-y: auto; /* enable vertical scrolling */
+    padding-right: 17px; /* Add space for scrollbar */
+    box-sizing: content-box; /* Ensure padding doesn't affect width */
 }
+
+
 
 .client-form-container form {
     display: flex;
