@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom"; // Import useNavigate instead of useHistory
+import { useNavigate } from "react-router-dom";
 import "./SamplePage.css";
 
 const SamplePage = () => {
-  // State variables
   const [name, setName] = useState('');
   const [samples, setSamples] = useState([]);
   const [recentSampleId, setRecentSampleId] = useState('');
   const [recentLabCode, setRecentLabCode] = useState('');
   const [recentSampleInfo, setRecentSampleInfo] = useState({});
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+  const navigate = useNavigate();
 
-  // Fetching data from backend on component mount
   useEffect(() => {
-    // Fetching user name
     axios.get('/api/getName')
       .then(response => {
         setName(response.data.name);
@@ -24,7 +22,6 @@ const SamplePage = () => {
         console.error('Error fetching name:', error);
       });
 
-    // Fetching recent sample IDs and lab codes
     axios.get('/api/getRecentSampleIdsAndLabCodes')
       .then(response => {
         setRecentSampleId(response.data.recentSampleId);
@@ -34,7 +31,6 @@ const SamplePage = () => {
         console.error('Error fetching recent sample info:', error);
       });
 
-    // Fetching recent sample info
     axios.get('/api/getRecentSampleInfo')
       .then(response => {
         setRecentSampleInfo(response.data);
@@ -163,8 +159,7 @@ const SamplePage = () => {
   const cgst = (total * 0.09).toFixed(2);
   const sgst = (total * 0.09).toFixed(2);
   const totalaftertax = (parseFloat(total) + parseFloat(cgst) + parseFloat(sgst)).toFixed(2);
-
-  // JSX
+  
   return (
     <div className="samplePage">
       <h1>CHEMIOPTICS LABS</h1>
@@ -172,41 +167,34 @@ const SamplePage = () => {
         <p>Samples</p>
       </div>
       <ul>
-        {/* Displaying sample details */}
         {samples.map((sample, index) => (
           <li key={index}>
             <div className="sampleDescription">
               <div>
                 Sample ID {index + 1}:{" "}
-                <a
-                  href={`/ticksheet/${sample.sampleId}`}
-                  style={{ textDecoration: "underline" }}
-                >
+                <Link to={`/ticksheet/${sample.sampleId}`} style={{ textDecoration: "underline" }}>
                   {sample.sampleId}
-                </a>
+                </Link>
               </div>
               <div>
                 Lab Code:{" "}
-                <a
-                  href={`/ticksheet/${sample.labCode}`}
-                  style={{ textDecoration: "underline" }}
-                >
+                <Link to={`/ticksheet/${sample.labCode}`} style={{ textDecoration: "underline" }}>
                   {sample.labCode}
-                </a>
+                </Link>
               </div>
               <p id="testPrice">INR: {GetTestPrice(sample.sampleId)}</p>
             </div>
           </li>
         ))}
       </ul>
-      {/* Displaying recent sample info */}
       <div className="sampleTotal">
-        <div id="recentSampleInfo">
-          Sample ID: {recentSampleInfo.sampleId}<br />
-          Lab Code: {recentSampleInfo.labCode}
-        </div>
+        <Link to={`/ticksheet/${recentSampleInfo.sampleId}`} style={{ textDecoration: "underline" }}>
+          <div id="recentSampleInfo">
+            Sample ID: {recentSampleInfo.sampleId}<br />
+            Lab Code: {recentSampleInfo.labCode}
+          </div>
+        </Link>
       </div>
-      {/* Button to generate bill */}
       <div className="billButton">
         <button onClick={handleGenerateBill}>Generate Bill</button>
       </div>

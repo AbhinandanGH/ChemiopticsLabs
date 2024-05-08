@@ -1,42 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import './ticksheet.css';
-import { Link } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 const Ticksheet = () => {
-  const [samples, setSamples] = useState([]);
   const [selectedParameters, setSelectedParameters] = useState([]);
-  const [manuallySelectedParameters, setManuallySelectedParameters] = useState([]); // New state
+  const [sample, setSample] = useState(null); // Define sample state variable
   const navigate = useNavigate();
   const location = useLocation();
-  const sample = location.state;
+  const { sampleId, labCode } = useParams();
 
   useEffect(() => {
-    const storedSamples = JSON.parse(localStorage.getItem('samplesData')) || [];
-    setSamples(storedSamples);
-
-    
-
-    const sampleId = localStorage.getItem('selectedSampleId');
-    const labCode = localStorage.getItem('selectedLabCode');
-
-    if (sampleId) {
-      selectWaterBasedOnSampleId(sampleId);
-    }
-
-    const storedManuallySelectedParameters = JSON.parse(localStorage.getItem('manuallySelectedParameters')) || [];
-    setManuallySelectedParameters(storedManuallySelectedParameters);
-  }, []);
-
- 
-   useEffect(() => {
-    const storedSelectedParameters = JSON.parse(localStorage.getItem('selectedParameters')) || [];
+    const storedSelectedParameters = [];
     setSelectedParameters(storedSelectedParameters);
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('selectedParameters', JSON.stringify(selectedParameters));
-  }, [selectedParameters]);
 
   const handleCheckboxChange = (parameter) => {
     setSelectedParameters((prevSelected) => {
@@ -49,9 +25,9 @@ const Ticksheet = () => {
   };
 
 
+  // Function to select checkboxes based on sample ID
   const selectWaterBasedOnSampleId = (sampleId) => {
-    // Implement logic to automatically select parameters based on sampleId
-    switch (sampleId) {
+    switch (sampleId) { // Different cases based on sampleId, each case calls a specific function to select checkboxes
       case 'WasteWaterPremium':
         selectWastePremium();
         break;
@@ -62,7 +38,7 @@ const Ticksheet = () => {
         selectConstruction();
         break;
       case 'DrinkingWaterPremium':
-        selectDrinkingPremium ();
+        selectDrinkingPremium();
         break;
       case 'DrinkingWaterComplete':
         selectDrinkingComplete();
@@ -84,49 +60,55 @@ const Ticksheet = () => {
     }
   };
 
-
-  // Function to select checkboxes for Waste parameters
+  // Function to select checkboxes for Waste Premium parameters
   const selectWastePremium = () => {
-    const wasteParameters = [3,7,8,10,11,18,19,20,21,22,24,26,28];
+    const wasteParameters = [3, 7, 8, 10, 11, 18, 19, 20, 21, 22, 24, 26, 28];
     wasteParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
   };
 
+  // Function to select checkboxes for Waste Complete parameters
   const selectWasteComplete = () => {
     const wasteParameters = [1, 3, 5, 7, 8, 9, 10, 11, 15, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28];
     wasteParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
   };
 
-
+  // Function to select checkboxes for Construction parameters
   const selectConstruction = () => {
     const constructionParameters = [8, 20, 26, 29, 30];
     constructionParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
   };
 
+  // Function to select checkboxes for Drinking Premium parameters
   const selectDrinkingPremium = () => {
-    const drinkingParameters = [5,10,11,13,14,15,16,17,18,20,21,22,23,24,25,28];
+    const drinkingParameters = [5, 10, 11, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 28];
     drinkingParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
   };
+
+  // Function to select checkboxes for Drinking Complete parameters
   const selectDrinkingComplete = () => {
     const drinkingParameters = [1, 2, 4, 5, 6, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 27, 25, 28, 22];
     drinkingParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
   };
 
-
-  const selectGroundWaterPremium= () => {
-    const groundWasteParameters = [4,5,8,10,11,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28];
+  // Function to select checkboxes for Groundwater Premium parameters
+  const selectGroundWaterPremium = () => {
+    const groundWasteParameters = [4, 5, 8, 10, 11, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28];
     groundWasteParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
   };
 
-  const selectGroundWaterComplete= () => {
+  // Function to select checkboxes for Groundwater Complete parameters
+  const selectGroundWaterComplete = () => {
     const groundWasteParameters = [1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 27, 24, 28, 22, 25, 26, 28];
     groundWasteParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
   };
 
+  // Function to select checkboxes for Irrigation parameters
   const selectIrrigation = () => {
     const irrigationGroundWasteParameters = [1, 4, 5, 8, 10, 11, 13, 15, 20, 21, 23, 25, 26, 28];
     irrigationGroundWasteParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
   };
 
+  // Function to select checkboxes for Surface parameters
   const selectSurface = () => {
     const surfaceGroundWasteParameters = [2, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 1, 27, 25, 24];
     surfaceGroundWasteParameters.forEach((rowNumber) => selectCheckbox(rowNumber));
@@ -134,59 +116,29 @@ const Ticksheet = () => {
 
   // Function to select a checkbox for a given row number
   const selectCheckbox = (rowNumber) => {
-    // Get the checkbox element for the specified row number
     const checkbox = document.querySelector(`tbody tr:nth-child(${rowNumber}) input[type="checkbox"]`);
 
-    // Check the checkbox if not already checked
     if (checkbox && !checkbox.checked) {
-      checkbox.checked = true; // Set the checked property to true
-      handleCheckboxChange(`Parameter ${rowNumber}`); // Call handleCheckboxChange with a parameter (you can replace it with the actual parameter name)
-      //console.log(`Row ${rowNumber} is selected.`); // Log a message to the console
+      checkbox.checked = true;
+      handleCheckboxChange(`Parameter ${rowNumber}`);
     }
   };
 
- 
+  // Function to navigate back to the sample page
   const navigateToSamplePage = () => {
     navigate('/samplePage', { state: { name: sample && sample.name } });
   };
 
+
   return (  // JSX structure representing the component's UI
     <div className="ticksheet">
       <h2>Physico-Chemical Parameters to be analyzed</h2>
-      {/* 
-      <div>
-      <h2>Samples</h2>
-      <ul>
-        {samples.map((sample, index) => (
-          <li key={index}>
-            <p>Sample ID: {sample.sampleId}</p>
-            <p>Lab Code: {sample.labCode}</p>
-          </li>
-        ))}
-      </ul>
-       </div> */}
-
-{sample && (
+      {sample && ( // Check if sample is defined before rendering
         <div>
           <p>Sample ID: {sample.sampleId}</p>
           <p>Lab Code: {sample.labCode}</p>
         </div>
       )}
-   
-        
-    
-
-
-
-      {/* <div className="button-container">
-        <button onClick={selectWaste}>Waste Water</button>
-        <button onClick={selectConstruction}>Construction Water</button>
-        <button onClick={selectDrinking}>Drinking Water</button>
-        <button onClick={selectGround}>Ground Water</button>
-        <button onClick={selectIrrigation}>Irrigation Water</button>
-        <button onClick={selectSurface}>Irrigation Water</button>
-      </div> */}
-
 
       <div className="navigation-container">
         <button onClick={navigateToSamplePage}>Back to Sample Page</button>
